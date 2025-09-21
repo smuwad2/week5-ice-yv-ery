@@ -47,7 +47,7 @@
 
     async function getCategories() {
       try {
-        const response = await axios.get('http://localhost:3000/categories');
+        const response = await axios.get('/categories');
         showCategories(response.data);
       } catch (error) {
         console.error('❌ Error fetching categories:', error);
@@ -81,7 +81,7 @@
       }
 
       try {
-        let url = 'http://localhost:3000/items';
+        let url = '/items'
         if (selectedCategory !== 'all') {
           url += `?category=${selectedCategory}`;
         }
