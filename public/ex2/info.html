@@ -23,8 +23,96 @@
 
         </div>
         <script>
-            function getData() {
- 
+            async function getData() {
+                // const limit = document.getElementById('limit');
+                // const type = document.getElementById('type');
+                // axios.get('/data', {
+                //     params: {
+                //         'input1': limit.value,
+                //         'input2': type.value,
+                //         'products':{
+                //             'name': x,
+                //             'price': y
+                //         },
+                //         'customers':{
+                //             'name': x,
+                //             'age': y,
+                //             'city': z
+                //         },
+                //         'suppliers':{
+                //             'name': x,
+                //             'age': y,
+                //             'city': z
+                //         }
+                //     }
+                // })
+                // .then(response => {
+                //     console.log("<h2>type.value</h2>");
+                //     console.log('<table><tr><td>type.value[0]</td><td>type.value[1]</td></tr>')
+                //     console.log('</table>')
+
+                // })
+                // .catch(error => {
+                //     console.log('error');
+                // })
+                const typeVal = document.getElementById('type').value;
+                const limitVal = document.getElementById('limit').value;
+                try {
+                    const response = await axios.get('/data', {
+                        params: {
+                            'type': typeVal,
+                            'limit': limitVal
+                        }
+                    });
+                    generateTable(response.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            function generateTable(dataObj) {
+                const resultDivElem = document.getElementById('result');
+                while (resultDivElem.firstChild) {
+                    resultDivElem.firstChild.remove(); // remove previous header selection
+                }
+
+                // create h2 element
+                const h2Elem = document.createElement('h2');
+                h2Elem.innerText = dataObj['type'];
+                resultDivElem.appendChild(h2Elem);
+
+                // create table element
+                const tableElem = document.createElement('table');
+                tableElem.className = 'table';
+                const tBodyElem = document.createElement('tbody');
+            
+
+                // create table heading elements
+                const trElem = document.createElement('tr');
+                const tblHeadings = Object.keys(dataObj['records'][0]);
+                for (const headingVal of tblHeadings) { // ['name', 'price']
+                    const thElem = document.createElement('th');
+                    thElem.innerText = headingVal;
+                    trElem.appendChild(thElem);
+                }
+                tBodyElem.appendChild(trElem);
+                // tableElem.appendChild(tBodyElem);
+                // resultDivElem.appendChild(tableElem);
+
+                // create table body elements
+                // loop through elements in records array
+                for (let i=0; i< dataObj['records'].length; i++) {
+                    const trElem = document.createElement('tr');
+                    for (let j=0; j<tblHeadings.length; j++) {
+                        const propVal = dataObj['records'][i][tblHeadings[j]];
+                        const tdElem = document.createElement('td');
+                        tdElem.innerText = propVal;
+                        trElem.appendChild(tdElem);
+                    }
+                    tBodyElem.appendChild(trElem);
+                }
+                tableElem.appendChild(tBodyElem);
+                resultDivElem.appendChild(tableElem);
             }
 
         </script>
